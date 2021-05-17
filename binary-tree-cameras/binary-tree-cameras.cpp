@@ -48,3 +48,45 @@ private:
     int cam;
     map<TreeNode*, bool> mp;
 };
+
+// without using map
+class Solution {
+public:
+    int minCameraCover(TreeNode* root) {
+        // when root is null
+        if(!root) return 0;
+        // when only root ie. single node
+        if(!root->left && !root->right) return 1;
+        // else root can be covered by it parents so no need to have camera at root
+        cam = 0;
+        //(0), (1,2)
+        return dfs(root)==0 ? cam+1 : cam;
+    }
+    
+    // to start from bottom up manner
+    // we reach to the most bottom node
+    int dfs(TreeNode* node){
+        if(!node){
+            return 1;
+        }
+        
+        int left = dfs(node->left);
+        int right = dfs(node->right);
+        
+        // leaf node
+        // can't have a camera but can be covered without camera
+        if(left==0 || right==0){
+            cam++;
+            return 2;
+        }
+        // any of the child is not covered
+        else if(left==2 || right==2){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+private:
+    int cam;
+};
