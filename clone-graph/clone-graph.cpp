@@ -27,8 +27,9 @@ public:
         }
         vector<Node*> visit(101, NULL);
         Node *root = new Node(node->val);
-        visit[node->val] = root;
+        // dfs(node, root, visit);
         // bfs
+        visit[node->val] = root;
         queue<Node*> q;
         q.push(node);
         while(!q.empty()){
@@ -61,24 +62,3 @@ public:
         }
     }
 };
-// 1 1
-// --2
-// 2 2
-// --1
-// --3
-// 3 3
-// --2
-// --4
-// 4 4
-// --1
-// --3
-// --4
-// 4 4
-// --1
-// --3
-// 3 3
-// --2
-// 2 2
-// --1
-// --3
-// --4
