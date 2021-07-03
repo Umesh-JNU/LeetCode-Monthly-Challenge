@@ -27,8 +27,23 @@ public:
         }
         vector<Node*> visit(101, NULL);
         Node *root = new Node(node->val);
-        dfs(node, root, visit);
-        
+        visit[node->val] = root;
+        // bfs
+        queue<Node*> q;
+        q.push(node);
+        while(!q.empty()){
+            Node *u = q.front();
+            q.pop();
+
+            for(auto v: u->neighbors){
+                if(visit[v->val] == NULL){
+                    q.push(v);
+                    visit[v->val] = new Node(v->val);
+                }
+
+                visit[u->val]->neighbors.push_back(visit[v->val]);
+            }
+        }
         return root;
     }
     
