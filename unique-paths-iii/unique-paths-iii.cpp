@@ -1,31 +1,31 @@
 class Solution {
 public:
-    int uniquePathsIII(vector<vector<int>>& G) {
-        int startRow, startCol, mask = 0;
-        m = size(G), n = size(G[0]);
-        for(int i = 0; i < m; i++)
-            for(int j = 0; j < n; j++) {
-                if(G[i][j] == 1) startRow = i, startCol = j;
-                if(G[i][j] != -1) mask |= 1 << i*n+j;       // set bits of cells that need to be visited
-            }
+    int dfs(vector<vector<int>> &grid, int y, int x, int zeros){
+        if(y < 0 || y >= grid.size() || x < 0 || x >= grid[0].size() || grid[y][x] == -1)
+            return 0;
+        if(grid[y][x] == 2)
+            return zeros == -1 ? 1 : 0;
 
-        dfs(G, startRow, startCol, mask);
-        return ans;
+        grid[y][x] = -1;
+        int total = dfs(grid, y - 1, x, zeros - 1) + dfs(grid, y + 1, x, zeros - 1) + dfs(grid, y, x - 1, zeros - 1) + dfs(grid, y, x + 1, zeros - 1);
+        grid[y][x] = 0;
+        return total;
     }
-private:
-    int m, n, ans = 0, dir[5] {0, 1, 0, -1, 0}; 
-    bool isValidCell(vector<vector<int>>& G, int i, int j, int mask) {
-        return i >= 0 && j >= 0 && i < size(G) && j < size(G[0]) && G[i][j] != -1 && mask & 1 << i*n+j;
-    }
-	
-    void dfs(vector<vector<int>>& G, int i, int j, int mask) {
-        if(not isValidCell(G, i, j, mask)) return;
-        mask ^= 1 << i*n+j;                                  // mark as visited by unsetting bit
-        if(G[i][j] == 2) {       
-            if(!mask) ans++;                                 // valid path if all required cells are visited
-            return;              
+    int uniquePathsIII(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+
+        // finding the start and the end and counting the number of zeros
+        int sx = 0, sy = 0, zeros = 0;
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j<m; j++){
+                if(grid[i][j] == 1)
+                    sy = i, sx = j;
+                if(grid[i][j] == 0)
+                    zeros++;
+            }
         }
-        for(int k = 0; k < 4; k++)
-            dfs(G, i + dir[k], j + dir[k+1], mask);
-    }        
+
+        return dfs(grid, sy, sx, zeros);
+    } 
 };
